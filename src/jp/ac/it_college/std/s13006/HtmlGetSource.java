@@ -10,25 +10,32 @@ import java.net.URL;
 public class HtmlGetSource {
 
     public static void main(String[] args) {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         try {
-//            URL url = new URL(args[0]);
-            URL url1 = new URL("http://www.yahoo.co.jp/");
-            Object content = url1.getContent();
-            if (content instanceof InputStream) {
-                BufferedReader bf = new BufferedReader(new InputStreamReader( (InputStream)content) );
-                String line;
-                while ((line = bf.readLine()) != null) {
-                    System.out.println(line);
-                }
-            } else {
-                System.out.println(content.toString());
-            }
-        } catch (ArrayIndexOutOfBoundsException e) {
-            System.err.println("引数にURLを指定してください");
-            System.exit(-1);
+            System.out.println("URLを入力してください");
+            URL url = new URL("http://www.yahoo.co.jp/");
+            url = new URL(br.readLine());
+            System.out.println(getSourceText(url));
+
         } catch (IOException e) {
             System.err.println(e);
             System.exit(-1);
         }
+    }
+
+
+    public static String getSourceText(URL url) throws IOException {
+        InputStream in = url.openStream();
+        StringBuilder sb = new StringBuilder();
+        try {
+            BufferedReader bf = new BufferedReader(new InputStreamReader(in));
+            String s;
+            while ((s=bf.readLine())!=null) {
+                sb.append(s);
+            }
+        } finally {
+            in.close();
+        }
+        return sb.toString();
     }
 }
